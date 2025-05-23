@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcard Trainer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top Controls -->
+  <div class="top-controls">
+    <select id="deck-select">
+      <option value="lecture1">relevance</option>
+      <option value="lecture2">politeness1</option>
+      <option value="lecture3">politeness2</option>
+      <option value="lecture4">conversation</option>
+      <option value="lecture5">discourse</option>
+
+
+      
+
+    </select>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="viewFavorites()">📖 View Favorites</button>
+  </div>
+
+  <!-- Flashcard Container -->
+  <div class="flashcard-container">
+
+    <!-- Flashcard -->
+    <div id="flashcard">
+      <div id="card" class="card">
+        <div class="card-inner">
+          <div class="card-front">
+            <p id="flashcard-question">Select deck and press Start</p>
+          </div>
+          <div class="card-back">
+            <p id="flashcard-answer">Answer</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="stats">
+        <span id="progress">Remaining: --</span>
+        <span id="timer">Time left: --</span>
+        <span id="score">Score: 0</span>
+      </div>
+
+      <div class="action-buttons">
+        <button onclick="markKnown()">✅ Mark Known</button>
+        <button onclick="markFavorite()">⭐ Favorite</button>
+        <button onclick="toggleCard()">🔄 Flip</button>
+        <button onclick="nextCard()">➡️ Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

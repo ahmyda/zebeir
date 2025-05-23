@@ -1,0 +1,156 @@
+
+[
+  {
+    "question": "What is the central idea of Relevance Theory in communication?",
+    "answer": "Communication is fundamentally referential and context-dependent"
+  },
+  {
+    "question": "According to Relevance Theory, what does an assumption need to have in order to be relevant?",
+    "answer": "Contextual effect"
+  },
+  {
+    "question": "What is meant by 'contextual effect' in Relevance Theory?",
+
+    "answer": "The way new information changes existing assumptions"
+  },
+  {
+    "question": "How does Relevance Theory explain implicature?",
+
+    "answer": "By selecting relevant contextual features and recognizing relevance"
+  },
+  {
+    "question": "What role does the hearer play in Relevance Theory?",
+
+    "answer": "The hearer selects relevant features of context to interpret meaning"
+  },
+  {
+    "question": "What does Relevance Theory suggest about expectations of relevance raised by an utterance?",
+
+    "answer": "They guide the hearer toward the speaker’s intended meaning"
+  },
+  {
+    "question": "Which of the following can be considered relevant according to Relevance Theory?",
+
+    "answer": "New information that contradicts or confirms prior beliefs"
+  },
+  {
+    "question": "What governs the degree of relevance in Relevance Theory?",
+
+    "answer": "Contextual effect and processing effort"
+  },
+  {
+    "question": "According to Relevance Theory, how is relevance determined?",
+
+    "answer": "Based on the amount of effect produced and the effort required to process it"
+  },
+  {
+    "question": "What is an 'ostensive stimulus' in Relevance Theory?",
+
+    "answer": "An action that clearly signals an intention to communicate"
+  },
+  {
+    "question": "What is the Cognitive Principle of Relevance?",
+
+    "answer": "Human cognition is geared towards the maximization of relevance"
+  },
+  {
+    "question": "What does the Communicative Principle of Relevance state?",
+
+    "answer": "Every ostensive stimulus conveys a presumption of its own optimal relevance"
+  },
+  {
+    "question": "What kind of effects does Relevance Theory identify?",
+
+    "answer": "Strengthening, contradicting, and contextual implication"
+  },
+  {
+    "question": "Which of the following is NOT a type of cognitive effect in Relevance Theory?",
+
+    "answer": "Making assumptions more complex"
+  },
+  {
+    "question": "In Relevance Theory, why might some utterances require more effort to interpret?",
+
+    "answer": "Because they are less relevant"
+  },
+  {
+    "question": "What does Relevance Theory say about indirect communication?",
+    "options": [
+      "It is always irrelevant",
+      "It can still be relevant if the hearer can infer the intended meaning",
+      "It is only used in formal settings",
+      "It requires no cognitive processing"
+    ],
+    "answer": "It can still be relevant if the hearer can infer the intended meaning"
+  },
+  {
+    "question": "What is the relationship between relevance and inference in Relevance Theory?",
+
+    "answer": "Relevance guides inference by helping select relevant contextual assumptions"
+  },
+  {
+    "question": "What is the role of background knowledge in Relevance Theory?",
+
+    "answer": "It helps determine which assumptions are relevant"
+  },
+  {
+    "question": "Which of the following is an example of a contextual implication?",
+
+    "answer": "I heard a loud noise and thought it was a car crash, but found nothing."
+  },
+  {
+    "question": "What is the main goal of communication according to Relevance Theory?",
+
+    "answer": "To maximize relevance for the hearer"
+  },
+  {
+    "question": "Why might a speaker choose to make an utterance more explicit?",
+
+    "answer": "To reduce the hearer’s effort and increase clarity"
+  },
+  {
+    "question": "What happens when an utterance fails to meet the expectation of relevance?",
+
+    "answer": "The hearer may ask for clarification or reinterpret the message"
+  },
+  {
+    "question": "What is the difference between relevance and informativeness?",
+
+    "answer": "Relevance refers to usefulness in context, while informativeness refers to the amount of new information"
+  },
+  {
+    "question": "Which of the following best describes 'positive cognitive effect'?",
+
+    "answer": "A cognitive change in the way one sees the world"
+  },
+  {
+    "question": "What does Relevance Theory say about non-verbal communication?",
+
+    "answer": "Non-verbal behavior can also function as an ostensive stimulus"
+  },
+  {
+    "question": "How does Relevance Theory treat ambiguity?",
+
+    "answer": "Ambiguity is resolved through contextual assumptions and relevance"
+  },
+  {
+    "question": "What is the primary focus of Relevance Theory compared to other pragmatic theories?",
+
+    "answer": "It focuses on how people achieve mutual understanding through maximizing relevance"
+  },
+  {
+    "question": "What is the relationship between speaker intention and hearer interpretation in Relevance Theory?",
+
+    "answer": "Hearer interpretation depends on guessing the speaker's intention using context"
+  },
+  {
+    "question": "What does Relevance Theory assume about human cognition?",
+
+    "answer": "Humans aim to get as many cognitive effects as possible for as little effort as possible"
+  },
+  {
+    "question": "Which of the following is an example of a face-threatening act?",
+
+    "answer": "Saying 'You're wrong' directly without justification"
+  }
+]

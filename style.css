@@ -1,0 +1,168 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  transition: background 0.4s ease;
+}
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins :wght@400;600&display=swap');
+
+.top-controls {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+select,
+button {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+select {
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #6c63ff;
+  color: white;
+}
+
+button:hover {
+  background-color: #574fd6;
+}
+
+/* Flashcard container */
+.flashcard-container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  height: 250px;
+  perspective: 1000px;
+  margin-bottom: 2rem;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #ff4d4d, #cc0000);
+  color: white;
+}
+
+.card-back {
+  background: linear-gradient(145deg, #4d77ff, #335ecc);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+/* Hover effect on cards */
+.card-front:hover,
+.card-back:hover {
+  transform: scale(1.02);
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button.large {
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background: linear-gradient(135deg, #1e1e2f, #2c2c3e);
+  color: #f1f1f1;
+}
+
+body.dark-mode .card-front {
+  background: linear-gradient(145deg, #b30000, #5a0000);
+}
+
+body.dark-mode .card-back {
+  background: linear-gradient(145deg, #005fd1, #003a8c);
+}
+
+body.dark-mode select {
+  background-color: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+}
