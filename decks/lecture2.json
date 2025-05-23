@@ -1,5 +1,20 @@
 [
-     {
+  {
+    "question": "What does politeness primarily involve according to the lecture?",
+
+    "answer": "Establishing and maintaining feelings of comity within social groups"
+  },
+  {
+    "question": "According to Leech, what is the purpose of the Politeness Principle?",
+
+    "answer": "To minimize cost and maximize benefit to speaker/hearer"
+  },
+  {
+    "question": "Which of the following best defines 'face' in the context of politeness theory?",
+
+    "answer": "An individual's feeling of self-worth or self-image that others should respect"
+  },
+  {
     "question": "What are the two types of face identified by Brown and Levinson?",
 
     "answer": "Positive face and negative face"
@@ -8,5 +23,129 @@
     "question": "Which type of face refers to the desire for autonomy and freedom from imposition?",
 
     "answer": "Negative face"
+  },
+  {
+    "question": "Which type of face refers to the desire for closeness, inclusion, and solidarity?",
+
+    "answer": "Positive face"
+  },
+  {
+    "question": "What is a Face-Threatening Act (FTA)?",
+
+    "answer": "An act that threatens someone's self-image or face"
+  },
+  {
+    "question": "Which of the following is an example of a Face-Saving Act?",
+    "answer": "Saying 'Could I possibly borrow your pen?' instead of 'Give me your pen.'"
+  },
+  {
+    "question": "Which of the following maxims under the Politeness Principle involves minimizing dispraise and maximizing praise of the hearer?",
+
+    "answer": "Approbation"
+  },
+  {
+    "question": "Which maxim encourages minimizing the hearer's discomfort and maximizing their comfort?",
+
+    "answer": "Consideration"
+  },
+  {
+    "question": "What does the 'tact' maxim involve?",
+
+    "answer": "Minimizing cost and maximizing benefit to the hearer"
+  },
+  {
+    "question": "What is the function of hedges and mitigating devices in politeness?",
+
+    "answer": "They soften requests and reduce threat to face"
+  },
+  {
+    "question": "Which of the following utterances appeals more to positive face?",
+
+    "answer": "You’re always welcome here; we’re like family."
+  },
+  {
+    "question": "Which of the following utterances appeals more to negative face?",
+
+    "answer": "Would you mind terribly if I asked you a question?"
+  },
+  {
+    "question": "What is the difference between on-record and off-record strategies?",
+
+    "answer": "On-record clearly communicates intent, while off-record implies meaning indirectly"
+  },
+  {
+    "question": "Which strategy might include using rhetorical questions or hints?",
+
+    "answer": "Off-record"
+  },
+  {
+    "question": "What does a 'bald-on-record' strategy typically suggest about the speaker-hearer relationship?",
+
+    "answer": "The speaker has power over the hearer"
+  },
+  {
+    "question": "What is the purpose of redressive action in politeness theory?",
+
+    "answer": "To give face to the addressee and reduce face threat"
+  },
+  {
+    "question": "Which of the following is an example of a negative politeness strategy?",
+
+    "answer": "Would you mind terribly if I borrowed your pen?"
+  },
+  {
+    "question": "Which of the following is an example of a positive politeness strategy?",
+
+    "answer": "We’re all in this together!"
+  },
+  {
+    "question": "Which of the following is a face-threatening act?",
+
+    "answer": "Calling someone “stupid” directly"
+  },
+  {
+    "question": "What does a face-saving act do?",
+
+    "answer": "Reduces or avoids threatening someone's face"
+  },
+  {
+    "question": "Which of the following expressions is most likely to appeal to negative face?",
+
+    "answer": "I know you’re busy, but could you help me for a minute?"
+  },
+  {
+    "question": "Which of the following expressions is most likely to appeal to positive face?",
+
+    "answer": "I really admire your work!"
+  },
+  {
+    "question": "Which of the following best describes 'positive politeness'?",
+
+    "answer": "Focuses on solidarity and shared goals"
+  },
+  {
+    "question": "Which of the following best describes 'negative politeness'?",
+
+    "answer": "Attempts to minimize imposition"
+  },
+  {
+    "question": "Which of the following is NOT one of Leech’s maxims of politeness?",
+
+    "answer": "Honesty"
+  },
+  {
+    "question": "Which of the following is a key feature of politeness according to the lecture?",
+
+    "answer": "Politeness involves monitoring the relationship between interlocutors"
+  },
+  {
+    "question": "What role does background knowledge play in interpreting politeness?",
+
+    "answer": "It helps determine what counts as polite in a given situation"
+  },
+  {
+    "question": "Which of the following is an example of an adjacency pair related to politeness?",
+
+    "answer": "All of the above"
   }
 ]
