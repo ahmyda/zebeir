@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Linguistics Revision Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #1a252f;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --card-bg: rgba(255, 255, 255, 0.92);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            background: var(--dark);
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+        }
+        
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mode-btn:hover:not(.active) {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .mode-btn.active {
+            background: var(--accent);
+            box-shadow: 0 0 12px rgba(231, 76, 60, 0.6);
+        }
+        
+        .game-container {
+            padding: 25px;
+            min-height: 400px;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            font-size: 1.35rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid #e9ecef;
+            text-align: left;
+            font-size: 1.05rem;
+        }
+        
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #bbdefb;
+        }
+        
+        .option.selected {
+            background: #e3f2fd;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        /* Matching mode styles */
+        .matching-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .column-title {
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            background: var(--light);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .match-item {
+            background: white;
+            padding: 14px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .match-item:hover {
+            background: #f0f7ff;
+            border-color: var(--secondary);
+        }
+        
+        .match-item.selected {
+            background: #e3f2fd;
+            border-style: solid;
+            border-color: var(--secondary);
+        }
+        
+        .match-item.matched {
+            background: #d4edda;
+            border-color: #28a745;
+            cursor: default;
+        }
+        
+        .feedback {
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            display: none;
+            background: #e8f4fc;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .next-btn {
+            background: var(--success);
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background: #219653;
+        }
+        
+        .next-btn:disabled {
+            background: #b0bec5;
+            cursor: not-allowed;
+        }
+        
+        .reset-btn {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background: #d35400;
+        }
+        
+        .progress-container {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        .mistakes-section, .checklist {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .mistakes-section {
+            background: #fff8e1;
+            border-left: 4px solid var(--warning);
+            display: none;
+        }
+        
+        .mistakes-section.show {
+            display: block;
+        }
+        
+        .checklist {
+            background: #e8f4fc;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mistakes-list, .checklist-items {
+            padding-left: 25px;
+        }
+        
+        .mistakes-list li, .checklist-items li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .checklist-items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .checklist-item i {
+            color: var(--success);
+            margin-top: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 18px;
+            color: white;
+            background: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .matching-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 1.9rem;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .mode-btn {
+                padding: 8px 15px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Applied Linguistics Revision Game</h1>
+            <p class="subtitle">Test your knowledge through Multiple Choice, True/False, and Matching activities</p>
+        </header>
+        
+        <div class="game-info">
+            <div><i class="fas fa-star"></i> Score: <span id="score-value">0</span></div>
+            <div><i class="fas fa-clock"></i> Time: <span id="time-value">60</span>s</div>
+        </div>
+        
+        <div class="game-container">
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="mcq">Multiple Choice</button>
+                <button class="mode-btn" data-mode="true-false">True/False</button>
+                <button class="mode-btn" data-mode="matching">Matching</button>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="question-card">
+                <div class="question" id="question-text">Loading question...</div>
+                <div id="game-content">
+                    <!-- Dynamic content will go here -->
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn next-btn" id="next-btn" disabled>Next Question</button>
+                <button class="btn reset-btn" id="reset-btn">Reset Game</button>
+            </div>
+            
+          
+            
+
+        </div>
+        
+        <footer>
+            <p>Applied Linguistics Revision Tool | Based on Brumfit (1977), Spolsky (2005), Widdowson, and AAAL</p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== QUESTION BANK =====
+        const mcqQuestions = [
+            {
+                question: "Define Applied Linguistics and explain how it differs from theoretical linguistics.",
+                options: [
+                    "Applied Linguistics studies idealized language systems while theoretical linguistics addresses real-world problems",
+                    "Applied Linguistics investigates real-world problems where language is central and seeks practical, interdisciplinary solutions, unlike theoretical linguistics which studies abstract rules",
+                    "Applied Linguistics is only concerned with language teaching while theoretical linguistics covers all language aspects",
+                    "There is no significant difference between the two fields"
+                ],
+                correct: 1,
+                feedback: "Correct! Applied Linguistics, as defined by Brumfit (1977), investigates real-world problems where language is central and seeks practical, interdisciplinary solutions. Unlike theoretical linguistics—which studies idealized, abstract language rules—AL addresses messy, contextual issues (e.g., language teaching, policy, translation) and draws on psychology, sociology, and education (AAAL)."
+            },
+            {
+                question: "Why is 'Applied Linguistics' not the same as 'Linguistics Applied'?",
+                options: [
+                    "'Linguistics Applied' is a newer term that has replaced 'Applied Linguistics'",
+                    "'Linguistics Applied' assumes problems can be solved by directly applying linguistic rules, while Applied Linguistics recognizes the need for mediation through cultural, educational, and individual lenses",
+                    "They are essentially the same concept with different names",
+                    "'Applied Linguistics' is only used in academic contexts while 'Linguistics Applied' is used in professional settings"
+                ],
+                correct: 1,
+                feedback: "Exactly! 'Linguistics Applied' assumes language problems can be solved by directly applying linguistic rules, ignoring social and psychological context. 'Applied Linguistics,' however, recognizes that real problems require mediation—interpreting linguistic insights through cultural, educational, and individual lenses. AL is multilateral and reformulates problems; 'Linguistics Applied' is unilateral and rigid."
+            },
+            {
+                question: "Give three areas within the scope of Applied Linguistics with examples.",
+                options: [
+                    "Language Teaching: Designing activities for Algerian EFL students; Forensic Linguistics: Analyzing threatening messages; Critical Discourse Analysis: Examining political speeches in Algeria",
+                    "Phonetics: Studying sound production; Syntax: Analyzing sentence structure; Semantics: Interpreting meaning",
+                    "Historical Linguistics: Tracking language evolution; Comparative Linguistics: Comparing language families; Typology: Classifying languages",
+                    "Literature: Analyzing novels; Poetry: Studying verse forms; Drama: Examining plays"
+                ],
+                correct: 0,
+                feedback: "Correct example! The three areas are: (1) Language Teaching: Designing communicative activities for Algerian EFL students, (2) Forensic Linguistics: Analyzing threatening messages to identify authorship, and (3) Critical Discourse Analysis: Examining how political speeches in Algeria construct national identity."
+            },
+            {
+                question: "How does Applied Linguistics contribute to language policy in multilingual countries like Algeria?",
+                options: [
+                    "By enforcing a single national language policy",
+                    "By providing evidence-based research to inform decisions about language use in education, courts, and media",
+                    "By promoting the use of English as the primary language",
+                    "By eliminating minority languages to simplify communication"
+                ],
+                correct: 1,
+                feedback: "Correct! Applied Linguistics informs decisions about which languages should be used in education, courts, and media. For example, it helps evaluate whether Tamazight, Arabic, or French should be mediums of instruction—balancing identity, equity, access, and practicality through evidence-based research."
+            }
+        ];
+
+        const trueFalseQuestions = [
+            {
+                question: "Applied Linguistics directly applies theoretical linguistic rules to solve real-world problems.",
+                options: ["True", "False"],
+                correct: 1,
+                feedback: "False! A common misconception is that Applied Linguistics directly applies theoretical linguistic rules. In reality, as Widdowson notes, AL doesn't just 'apply' theory; it mediates and adapts it to human realities through interdisciplinary approaches."
+            },
+            {
+                question: "According to Spolsky (2005), Applied Linguistics focuses on 'trying to resolve language-based problems that people encounter in the real world.'",
+                options: ["True", "False"],
+                correct: 0,
+                feedback: "True! Spolsky (2005) defines Applied Linguistics as focusing on 'trying to resolve language-based problems that people encounter in the real world,' whether they are learners, teachers, lawyers, or policymakers."
+            },
+            {
+                question: "Real language problems involve more than grammar or syntax, which is why Applied Linguistics draws on psychology, sociology, education, law, and computer science.",
+                options: ["True", "False"],
+                correct: 0,
+                feedback: "True! As stated by the AAAL, Applied Linguistics integrates 'the humanities to the social and natural sciences' because real language problems involve more than grammar or syntax."
+            },
+            {
+                question: "Language testing in Applied Linguistics ensures exams focus primarily on grammatical accuracy over real-world communication needs.",
+                options: ["True", "False"],
+                correct: 1,
+                feedback: "False! Language testing involves designing fair, reliable assessments of proficiency (e.g., IELTS). AL ensures tests are culturally unbiased, valid, and aligned with real-world communication needs—not just grammatical accuracy."
+            }
+        ];
+
+        const matchingQuestions = [
+            {
+                question: "Match the scholar to their key contribution or definition:",
+                left: ["Brumfit (1977)", "Spolsky (2005)", "Widdowson", "AAAL"],
+                right: [
+                    "“...theoretical and empirical investigation of real-world problems in which language is a central issue.”",
+                    "“...trying to resolve language-based problems that people encounter in the real world.”",
+                    "AL doesn’t just “apply” theory; it mediates and adapts it to human realities.",
+                    "AL integrates “the humanities to the social and natural sciences.”"
+                ],
+                correctPairs: [
+                    { left: "Brumfit (1977)", right: "“...theoretical and empirical investigation of real-world problems in which language is a central issue.”" },
+                    { left: "Spolsky (2005)", right: "“...trying to resolve language-based problems that people encounter in the real world.”" },
+                    { left: "Widdowson", right: "AL doesn’t just “apply” theory; it mediates and adapts it to human realities." },
+                    { left: "AAAL", right: "AL integrates “the humanities to the social and natural sciences.”" }
+                ],
+                feedback: "Great job! You've correctly matched each scholar to their key idea about Applied Linguistics."
+            },
+            {
+                question: "Match each Applied Linguistics subfield to its real-world application:",
+                left: ["Language Teaching", "Forensic Linguistics", "Critical Discourse Analysis", "Clinical Linguistics"],
+                right: [
+                    "Designing communicative activities for Algerian EFL students",
+                    "Analyzing threatening messages to identify authorship",
+                    "Examining how political speeches in Algeria construct national identity",
+                    "Diagnosing and treating speech disorders like aphasia after stroke"
+                ],
+                correctPairs: [
+                    { left: "Language Teaching", right: "Designing communicative activities for Algerian EFL students" },
+                    { left: "Forensic Linguistics", right: "Analyzing threatening messages to identify authorship" },
+                    { left: "Critical Discourse Analysis", right: "Examining how political speeches in Algeria construct national identity" },
+                    { left: "Clinical Linguistics", right: "Diagnosing and treating speech disorders like aphasia after stroke" }
+                ],
+                feedback: "Perfect! You understand how Applied Linguistics connects theory to real-world contexts."
+            }
+        ];
+
+// ===== GAME STATE =====
+let currentQuestionIndex = 0;
+let score = 0;
+let gameMode = 'mcq';
+let timer;
+let timeLeft = 60;
+let answered = false;
+let selectedOption = null;
+let selectedLeft = null;
+let selectedRight = null;
+let matchedPairs = [];
+let currentQuestions = []; // Array to hold randomized questions for current session
+
+// DOM elements
+const questionText = document.getElementById('question-text');
+const gameContent = document.getElementById('game-content');
+const feedbackElement = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const resetBtn = document.getElementById('reset-btn');
+const scoreValue = document.getElementById('score-value');
+const timeValue = document.getElementById('time-value');
+const progressBar = document.getElementById('progress-bar');
+const modeBtns = document.querySelectorAll('.mode-btn');
+const mistakesSection = document.getElementById('mistakes-section');
+
+// Shuffle array function (Fisher-Yates algorithm)
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Select random subset of questions
+function getRandomQuestions(questions, count = null) {
+    const shuffled = shuffleArray(questions);
+    if (count && count < questions.length) {
+        return shuffled.slice(0, count);
+    }
+    return shuffled;
+}
+
+// Get current question set (randomized)
+function getCurrentQuestionSet() {
+    if (gameMode === 'mcq') return getRandomQuestions(mcqQuestions, 3); // Show 3 random MCQ questions
+    if (gameMode === 'true-false') return getRandomQuestions(trueFalseQuestions, 3); // Show 3 random T/F questions
+    if (gameMode === 'matching') return getRandomQuestions(matchingQuestions, 2); // Show 2 random matching questions
+    return [];
+}
+
+// Initialize game
+function initGame() {
+    currentQuestionIndex = 0;
+    score = 0;
+    timeLeft = 60;
+    answered = false;
+    selectedOption = null;
+    selectedLeft = null;
+    selectedRight = null;
+    matchedPairs = [];
+    
+    // Get randomized questions for this session
+    currentQuestions = getCurrentQuestionSet();
+    
+    scoreValue.textContent = score;
+    timeValue.textContent = timeLeft;
+    updateProgressBar();
+    showQuestion();
+    startTimer();
+    mistakesSection.classList.remove('show');
+    nextBtn.disabled = true;
+}
+
+// Start timer
+function startTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => {
+        timeLeft--;
+        timeValue.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            if (!answered) {
+                handleTimeUp();
+            }
+        }
+    }, 1000);
+}
+
+// Handle time up
+function handleTimeUp() {
+    answered = true;
+    feedbackElement.innerHTML = `<i class="fas fa-hourglass-end" style="color: var(--warning);"></i> Time's up!`;
+    feedbackElement.className = "feedback show";
+    nextBtn.disabled = false;
+}
+
+// Update progress bar
+function updateProgressBar() {
+    const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
+    progressBar.style.width = `${progress}%`;
+}
+
+// Show current question based on mode
+function showQuestion() {
+    if (currentQuestionIndex >= currentQuestions.length) {
+        endGame();
+        return;
+    }
+    
+    const q = currentQuestions[currentQuestionIndex];
+    questionText.textContent = q.question;
+    feedbackElement.className = 'feedback';
+    gameContent.innerHTML = '';
+    answered = false;
+    nextBtn.disabled = true;
+    
+    if (gameMode === 'mcq' || gameMode === 'true-false') {
+        renderMCQ(q);
+    } else if (gameMode === 'matching') {
+        renderMatching(q);
+    }
+}
+
+// Render MCQ/True-False
+function renderMCQ(q) {
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'answer-options';
+    
+    // For MCQ, shuffle options but keep track of correct answer
+    let displayOptions = [...q.options];
+    let correctIndex = q.correct;
+    
+    if (gameMode === 'mcq') {
+        // Create a copy with indices
+        let indexedOptions = q.options.map((opt, i) => ({text: opt, originalIndex: i}));
+        // Shuffle
+        indexedOptions = shuffleArray(indexedOptions);
+        // Update display
+        displayOptions = indexedOptions.map(item => item.text);
+        correctIndex = indexedOptions.findIndex(item => item.originalIndex === q.correct);
+    }
+    
+    displayOptions.forEach((option, index) => {
+        const optionEl = document.createElement('div');
+        optionEl.className = 'option';
+        optionEl.textContent = option;
+        optionEl.addEventListener('click', () => selectMCQOption(index, correctIndex, q));
+        optionsContainer.appendChild(optionEl);
+    });
+    
+    gameContent.appendChild(optionsContainer);
+}
+
+// Handle MCQ option selection
+function selectMCQOption(selectedIndex, correctIndex, q) {
+    if (answered) return;
+    
+    answered = true;
+    clearInterval(timer);
+    
+    const options = gameContent.querySelectorAll('.option');
+    options.forEach((opt, i) => {
+        if (i === selectedIndex) {
+            opt.classList.add(selectedIndex === correctIndex ? 'correct' : 'incorrect');
+        }
+        if (i === correctIndex) {
+            opt.classList.add('correct');
+        }
+    });
+    
+    if (selectedIndex === correctIndex) {
+        score++;
+        scoreValue.textContent = score;
+        feedbackElement.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> ${q.feedback}`;
+    } else {
+        feedbackElement.innerHTML = `<i class="fas fa-times-circle" style="color: var(--accent);"></i> ${q.feedback}`;
+    }
+    
+    feedbackElement.className = 'feedback show';
+    nextBtn.disabled = false;
+    
+    if (currentQuestionIndex === 0) {
+        setTimeout(() => {
+            mistakesSection.classList.add('show');
+        }, 1500);
+    }
+}
+
+// Render Matching
+function renderMatching(q) {
+    const matchingArea = document.createElement('div');
+    matchingArea.className = 'matching-area';
+    
+    // Left column
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'column';
+    const leftTitle = document.createElement('div');
+    leftTitle.className = 'column-title';
+    leftTitle.textContent = 'Terms';
+    leftColumn.appendChild(leftTitle);
+    
+    // Shuffle left items too for more randomness
+    const shuffledLeft = shuffleArray([...q.left]);
+    
+    shuffledLeft.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'match-item';
+        itemEl.textContent = item;
+        itemEl.dataset.value = item;
+        itemEl.addEventListener('click', () => selectLeftItem(itemEl, q));
+        leftColumn.appendChild(itemEl);
+    });
+    
+    // Right column
+    const rightColumn = document.createElement('div');
+    rightColumn.className = 'column';
+    const rightTitle = document.createElement('div');
+    rightTitle.className = 'column-title';
+    rightTitle.textContent = 'Definitions';
+    rightColumn.appendChild(rightTitle);
+    
+    // Shuffle right items
+    const shuffledRight = shuffleArray([...q.right]);
+    
+    shuffledRight.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'match-item';
+        itemEl.textContent = item;
+        itemEl.dataset.value = item;
+        itemEl.addEventListener('click', () => selectRightItem(itemEl, q));
+        rightColumn.appendChild(itemEl);
+    });
+    
+    matchingArea.appendChild(leftColumn);
+    matchingArea.appendChild(rightColumn);
+    gameContent.appendChild(matchingArea);
+}
+
+// Handle left item selection
+function selectLeftItem(element, q) {
+    if (answered || selectedRight) return;
+    
+    // Deselect previous
+    document.querySelectorAll('.match-item.selected').forEach(el => el.classList.remove('selected'));
+    
+    element.classList.add('selected');
+    selectedLeft = element.dataset.value;
+}
+
+// Handle right item selection
+function selectRightItem(element, q) {
+    if (answered || !selectedLeft) return;
+    
+    element.classList.add('selected');
+    selectedRight = element.dataset.value;
+    
+    // Check if it's a correct pair
+    const isCorrect = q.correctPairs.some(pair => 
+        pair.left === selectedLeft && pair.right === selectedRight
+    );
+    
+    if (isCorrect) {
+        // Mark both as matched
+        document.querySelector(`.match-item[data-value="${selectedLeft}"]`).classList.add('matched');
+        document.querySelector(`.match-item[data-value="${selectedRight}"]`).classList.add('matched');
+        matchedPairs.push({left: selectedLeft, right: selectedRight});
+    } else {
+        // Flash red then deselect
+        const leftEl = document.querySelector(`.match-item[data-value="${selectedLeft}"]`);
+        const rightEl = element;
+        leftEl.style.borderColor = '#e74c3c';
+        rightEl.style.borderColor = '#e74c3c';
+        setTimeout(() => {
+            leftEl.style.borderColor = '';
+            rightEl.style.borderColor = '';
+            if (!leftEl.classList.contains('matched')) leftEl.classList.remove('selected');
+            if (!rightEl.classList.contains('matched')) rightEl.classList.remove('selected');
+        }, 800);
+    }
+    
+    // Reset selections
+    selectedLeft = null;
+    selectedRight = null;
+    
+    // Check if all matched
+    if (matchedPairs.length === q.correctPairs.length) {
+        answered = true;
+        clearInterval(timer);
+        score++;
+        scoreValue.textContent = score;
+        feedbackElement.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> ${q.feedback}`;
+        feedbackElement.className = 'feedback show';
+        nextBtn.disabled = false;
+        
+        if (currentQuestionIndex === 0) {
+            setTimeout(() => {
+                mistakesSection.classList.add('show');
+            }, 1500);
+        }
+    }
+}
+
+// Move to next question or end game
+function nextQuestion() {
+    currentQuestionIndex++;
+    
+    if (currentQuestionIndex < currentQuestions.length) {
+        timeLeft = 60;
+        timeValue.textContent = timeLeft;
+        showQuestion();
+        startTimer();
+    } else {
+        endGame();
+    }
+    
+    updateProgressBar();
+}
+
+// End game
+function endGame() {
+    questionText.textContent = `Game Completed! Your final score is ${score}/${currentQuestions.length}`;
+    gameContent.innerHTML = '';
+    feedbackElement.innerHTML = `<i class="fas fa-trophy" style="color: var(--success);"></i> Great job! You completed ${currentQuestions.length} random questions. Review the revision checklist above.`;
+    feedbackElement.className = 'feedback show';
+    nextBtn.disabled = true;
+    clearInterval(timer);
+}
+
+// Event listeners
+nextBtn.addEventListener('click', nextQuestion);
+resetBtn.addEventListener('click', initGame);
+
+modeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gameMode = btn.dataset.mode;
+        initGame();
+    });
+});
+
+// Initialize
+window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>
