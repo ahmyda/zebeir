@@ -3,495 +3,795 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Applied Linguistics</title>
-    <link rel="stylesheet" href="static/try.css">
+  <title>Applied Linguistics Quiz</title>
+  <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
-    
-
   <div id="game">
-    <h1>Applied Linguistics</h1>
+    <div id="header">
+      <h1>Applied Linguistics Quiz</h1>
+      <p>Test your knowledge of language theory and application</p>
+    </div>
     
-    <div id="timer">Time: 120s</div>
-    <div id="progress-bar"><div id="progress-fill" style="width: 0%"></div></div>
+    <!-- Game Settings -->
+    <div id="settings" class="settings-panel">
+      <h2>Quiz Settings</h2>
+      <div class="setting-group">
+        <label for="question-count">Number of Questions:</label>
+        <select id="question-count">
+          <option value="5">5 Questions</option>
+          <option value="10" selected>10 Questions</option>
+          <option value="15">15 Questions</option>
+          <option value="20">20 Questions</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label for="time-limit">Time Limit:</label>
+        <select id="time-limit">
+          <option value="60">1 Minute</option>
+          <option value="120" selected>2 Minutes</option>
+          <option value="180">3 Minutes</option>
+          <option value="300">5 Minutes</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label>Question Categories:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="category" value="theory" checked> Theory</label>
+          <label><input type="checkbox" name="category" value="applied" checked> Applied</label>
+          <label><input type="checkbox" name="category" value="analysis" checked> Analysis</label>
+        </div>
+      </div>
+      <button id="start-btn" class="btn-primary">Start Quiz</button>
+    </div>
     
-    <div id="question">Get ready...</div>
-    
-    <div class="choices" id="choices"></div>
-    
-    <div id="feedback"></div>
-    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
-    <button id="back" onclick="goToPage('index.html')" > HOME</button>
-    <button id="play-again-btn" class="hidden" onclick="restartGame()">Play Again!</button>
-    
-    <div id="score">Score: 0</div>
+    <!-- Game Interface -->
+    <div id="game-interface" class="hidden">
+      <div id="game-header">
+        <div id="timer-container">
+          <div id="timer">Time: 120s</div>
+          <div id="progress-bar">
+            <div id="progress-fill"></div>
+          </div>
+        </div>
+        <div id="score-container">
+          <div id="score">Score: 0</div>
+          <div id="question-counter">Question: 1/10</div>
+        </div>
+      </div>
+      
+      <div id="question-container">
+        <div id="question-category" class="category-tag">Applied Linguistics</div>
+        <div id="question">Get ready...</div>
+      </div>
+      
+      <div class="choices" id="choices"></div>
+      
+      <div id="feedback-container">
+        <div id="feedback"></div>
+        <div id="explanation"></div>
+      </div>
+      
+      <div id="controls">
+        <button id="back" class="btn-primary hidden" onclick="goToPage('index.html')">Home</button>
+        <button id="next-btn" class="btn-primary " onclick="nextQuestion()">Next Question</button>
+        <button id="play-again-btn" class="btn-primary hidden" onclick="restartGame()">Play Again!</button>
+      </div>
+    </div>
+  
+    <!-- Results Screen -->
+    <div id="results" class="hidden">
+      <div id="results-content">
+        <h2>Quiz Complete!</h2>
+        <div id="results-score">
+          <div id="score-circle">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e0e0" stroke-width="12"></circle>
+              <circle id="score-circle-fill" cx="60" cy="60" r="54" fill="none" stroke="#4361ee" stroke-width="12" stroke-dasharray="339.292" stroke-dashoffset="339.292" transform="rotate(-90 60 60)"></circle>
+              <text id="score-percent" x="60" y="65" text-anchor="middle" font-size="24" font-weight="bold" fill="#4361ee">0%</text>
+            </svg>
+          </div>
+          <div id="score-text">
+            <p>You scored</p>
+            <h3 id="final-score">0/0</h3>
+          </div>
+        </div>
+        <div id="performance-message"></div>
+        <div id="results-breakdown">
+          <div class="result-stat">
+            <span class="stat-label">Correct Answers:</span>
+            <span id="correct-count" class="stat-value">0</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-label">Time Used:</span>
+            <span id="time-used" class="stat-value">0s</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-label">Questions Answered:</span>
+            <span id="questions-answered" class="stat-value">0</span>
+          </div>
+        </div>
+        <div id="results-actions">
+          <button id="review-btn" class="btn-secondary">Review Answers</button>
+          <button id="new-game-btn" class="btn-primary" onclick="restartGame()">New Quiz</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-          const questions = [
-  {
-    q: "Applied Linguistics primarily focuses on:",
-    choices: ["Abstract language universals", "Real-world problems where language is central"],
-    answer: 1,
-    explanation: " As Brumfit (1977) said, AL investigates 'real-world problems in which language is a central issue.'"
-  },
-  {
-    q: "Theoretical linguistics differs from Applied Linguistics because it:",
-    choices: ["Studies idealized, rule-governed systems", "Solves classroom miscommunication"],
-    answer: 0,
-    explanation: " Theoretical linguistics examines abstract structures; AL tackles messy, contextual issues like teaching or policy."
-  },
-  {
-    q: "‘Linguistics Applied’ assumes that:",
-    choices: ["Language problems require social context", "Linguistic rules can be directly applied to solve problems"],
-    answer: 1,
-    explanation: " ‘Linguistics Applied’ ignores context; AL mediates theory through cultural and psychological lenses."
-  },
-  {
-    q: "Which field would analyze how Algerian political speeches construct national identity?",
-    choices: ["Phonology", "Critical Discourse Analysis (CDA)"],
-    answer: 1,
-    explanation: " CDA is a core area of Applied Linguistics that examines power, ideology, and language in society."
-  },
-  {
-    q: "Which is NOT a feature of Applied Linguistics?",
-    choices: ["Interdisciplinary approach", "Exclusive focus on grammar rules"],
-    answer: 1,
-    explanation: " AL draws on psychology, sociology, education—not just grammar."
-  },
-  {
-    q: "According to Spolsky (2005), Applied Linguistics aims to:",
-    choices: ["Describe universal syntax", "Resolve real-world language-based problems"],
-    answer: 1,
-    explanation: "Spot on! Spolsky emphasized solving problems faced by learners, teachers, lawyers, and policymakers."
-  },
-  {
-    q: "Which area of AL helps diagnose developmental dyslexia?",
-    choices: ["Theoretical semantics", "Clinical linguistics"],
-    answer: 1,
-    explanation: " Clinical linguistics applies linguistic knowledge to speech and communication disorders."
-  },
-  {
-    q: "Language testing in AL ensures exams are:",
-    choices: ["Based only on grammar", "Fair, valid, and culturally unbiased"],
-    answer: 1,
-    explanation: " AL ensures tests reflect real communication—not just grammatical accuracy."
-  },
-  {
-    q: "How has AL evolved since the 1960s?",
-    choices: ["It now focuses only on grammar teaching", "It expanded to include forensic linguistics, CDA, policy, and more"],
-    answer: 1,
-    explanation: " AL grew from language teaching to a broad, socially engaged field."
-  },
-  {
-    q: "Why can’t theoretical linguistics alone solve a biased test failure?",
-    choices: ["It ignores identity, power, and access", "It uses too much math"],
-    answer: 0,
-    explanation: "Precisely! Real issues involve context—something theoretical linguistics deliberately excludes."
-  },
-  {
-    q: "Contrastive Analysis (CA) is based on which learning theory?",
-    choices: ["Cognitive constructivism", "Behaviorism"],
-    answer: 1,
-    explanation: " CA treats language learning as habit formation influenced by L1 habits."
-  },
-  {
-    q: "According to Lado (1957), CA predicts difficulty by:",
-    choices: ["Comparing L1 and L2 structures", "Analyzing student essays"],
-    answer: 0,
-    explanation: " Lado said we can predict learning problems by systematically comparing native and target languages."
-  },
-  {
-    q: "What does ‘negative transfer’ mean in CA?",
-    choices: ["L1 and L2 are similar, easing learning", "L1 and L2 differ, causing interference"],
-    answer: 1,
-    explanation: " Negative transfer occurs when L1 structures interfere with L2 learning."
-  },
-  {
-    q: "An Arab learner saying ‘he come’ instead of ‘he comes’ is likely due to:",
-    choices: ["Overgeneralization", "L1 interference (negative transfer)"],
-    answer: 1,
-    explanation: " Arabic lacks third-person -s, so this is classic L1 transfer."
-  },
-  {
-    q: "In Stockwell’s CA hierarchy, which is the MOST difficult level?",
-    choices: ["Complete correspondence", "Split (L1 has one form, L2 has two)"],
-    answer: 1,
-    explanation: " A ‘split’ (e.g., Arabic /b/ vs. English /p, b/) is the hardest to learn."
-  },
-  {
-    q: "Which CA level applies when Arabic has grammatical gender but English doesn’t?",
-    choices: ["Absent category", "New category"],
-    answer: 0,
-    explanation: " ‘Absent category’ means L1 has a feature missing in L2."
-  },
-  {
-    q: "A key assumption of Lee (1968) was that:",
-    choices: ["L1 interference is the main cause of L2 difficulty", "Errors come only from overgeneralization"],
-    answer: 0,
-    explanation: " Lee believed L1 habits were the prime source of L2 errors."
-  },
-  {
-    q: "CA is most effective in which classroom setting?",
-    choices: ["Multilingual classrooms", "Homogeneous L1 groups (e.g., all Arab learners)"],
-    answer: 1,
-    explanation: " CA works best when all students share the same L1."
-  },
-  {
-    q: "A major criticism of CA is that it:",
-    choices: ["Overpredicts errors that never occur", "Focuses too much on learner cognition"],
-    answer: 0,
-    explanation: " CA often predicts errors that learners never actually make."
-  },
-  {
-    q: "Errors like ‘goed’ or ‘comed’ are problematic for CA because they result from:",
-    choices: ["L1 interference", "Overgeneralization of L2 rules"],
-    answer: 1,
-    explanation: " These are developmental errors—common even in L1 children—not L1 transfer."
-  },
-  {
-    q: "Error Analysis (EA) differs from CA because EA:",
-    choices: ["Predicts errors before they happen", "Analyzes actual errors learners produce"],
-    answer: 1,
-    explanation: " EA starts with real learner data, not theoretical predictions."
-  },
-  {
-    q: "In EA, a ‘mistake’ is:",
-    choices: ["A systematic error showing incomplete competence", "A random slip that can be self-corrected"],
-    answer: 1,
-    explanation: " Mistakes are performance slips; errors reflect current competence."
-  },
-  {
-    q: "An Arab learner saying ‘book Ahmad’ instead of ‘Ahmad’s book’ is an example of:",
-    choices: ["Intralingual error", "Interlingual (transfer) error"],
-    answer: 1,
-    explanation: " This reflects Arabic possessive structure interfering with English."
-  },
-  {
-    q: "Saying ‘comed’ for ‘came’ is classified in EA as:",
-    choices: ["Interlingual error", "Intralingual (overgeneralization) error"],
-    answer: 1,
-    explanation: " It’s overapplying the regular past tense rule—no L1 involvement."
-  },
-  {
-    q: "Which EA step involves determining if an error comes from L1 or overgeneralization?",
-    choices: ["Error identification", "Error source determination"],
-    answer: 1,
-    explanation: " Step 6 in Sridhar’s model identifies error sources."
-  },
-  {
-    q: "A limitation of EA is that it:",
-    choices: ["Only studies what learners CAN do", "Focuses on deficits without showing learning progression"],
-    answer: 1,
-    explanation: " EA highlights errors but doesn’t track how competence develops."
-  },
-  {
-    q: "Learners might avoid certain structures in EA because:",
-    choices: ["They’ve mastered them", "They fear making errors (avoidance strategy)"],
-    answer: 1,
-    explanation: " This ‘avoidance’ skews EA data—errors aren’t always visible."
-  },
-  {
-    q: "Interlanguage (IL) views learner language as:",
-    choices: ["Random errors", "A systematic, rule-governed transitional system"],
-    answer: 1,
-    explanation: " IL is coherent, evolving, and internally consistent—not chaotic."
-  },
-  {
-    q: "Who coined the term ‘Interlanguage’?",
-    choices: ["Larry Selinker", "Robert Lado"],
-    answer: 0,
-    explanation: " Selinker (1969) introduced the term now central to SLA."
-  },
-  {
-    q: "‘Fossilization’ in IL refers to:",
-    choices: ["Temporary errors during learning", "Permanent fixation of non-target forms"],
-    answer: 1,
-    explanation: " Fossilized errors persist despite exposure or instruction."
-  },
-  {
-    q: "Which is NOT a process in Selinker’s IL model?",
-    choices: ["L1 transfer", "Universal Grammar activation"],
-    answer: 1,
-    explanation: " Selinker’s five processes include L1 transfer, training transfer, learning strategies, communication strategies, and overgeneralization—not UG."
-  },
-  {
-    q: "Overgeneralization (e.g., ‘goed’) is part of which IL process?",
-    choices: ["L1 transfer", "Overgeneralization of L2 rules"],
-    answer: 1,
-    explanation: " It’s a core cognitive process in IL development."
-  },
-  {
-    q: "IL is ‘permeable’ because:",
-    choices: ["Its rules are fixed from the start", "Its rules are unstable and constantly revised"],
-    answer: 1,
-    explanation: " Permeability means IL evolves as learners integrate new input."
-  },
-  {
-    q: "Which factor can cause fossilization?",
-    choices: ["Rich, immersive input", "Advanced age or low motivation"],
-    answer: 1,
-    explanation: " Selinker linked fossilization to psychological and social factors."
-  },
-  {
-    q: "IL methodology compares:",
-    choices: ["Only L1 and L2", "L1 output, IL output, and native L2 output"],
-    answer: 1,
-    explanation: " Triangulating these three reveals the learner’s transitional system."
-  },
-  {
-    q: "A key criticism of IL theory is:",
-    choices: ["It ignores L1 influence", "It lacks agreed methods to track IL change over time"],
-    answer: 1,
-    explanation: " Longitudinal data is hard to collect, making developmental claims difficult to verify."
-  },
-  {
-    q: "Which approach is most learner-centered?",
-    choices: ["Contrastive Analysis", "Interlanguage theory"],
-    answer: 1,
-    explanation: " IL sees learners as active hypothesis-testers, not passive habit-formers."
-  },
-  {
-    q: "Forensic linguistics in AL might involve:",
-    choices: ["Designing grammar drills", "Analyzing threatening messages for authorship"],
-    answer: 1,
-    explanation: " It applies linguistic analysis to legal and investigative contexts."
-  },
-  {
-    q: "In multilingual Algeria, AL helps decide:",
-    choices: ["Which font to use in textbooks", "Which languages should be used in education and courts"],
-    answer: 1,
-    explanation: " AL informs language policy with research on identity, access, and equity."
-  },
-  {
-    q: "CDA examines how language:",
-    choices: ["Follows syntactic trees", "Reproduces power and inequality"],
-    answer: 1,
-    explanation: " CDA reveals ideology in media, politics, and advertising."
-  },
-  {
-    q: "The shift from CA to EA reflected a move from:",
-    choices: ["Learner-focused to teacher-focused", "Teacher-focused to learner-focused"],
-    answer: 1,
-    explanation: " EA put the learner’s output—not just L1-L2 comparison—at the center."
-  },
-  {
-    q: "Which error type is ‘turn off the TV’ vs. ‘close the TV’?",
-    choices: ["Syntactic overgeneralization", "Semantic transfer"],
-    answer: 1,
-    explanation: " ‘Close’ reflects L1 (Arabic) verb usage—semantic interference."
-  },
-  {
-    q: "‘He is comes’ is an example of:",
-    choices: ["Morphological overgeneralization", "Syntactic intralingual error"],
-    answer: 1,
-    explanation: " It’s a faulty combination of progressive and simple present—within L2 system."
-  },
-  {
-    q: "According to CA, teaching content should equal:",
-    choices: ["All L2 grammar", "The sum of L1-L2 differences"],
-    answer: 1,
-    explanation: " Lee (1968) argued teaching should focus only on contrasts."
-  },
-  {
-    q: "Which is a ‘new category’ for Arabic speakers learning English?",
-    choices: ["Plural nouns", "Indefinite articles ('a', 'an')"],
-    answer: 1,
-    explanation: " Arabic lacks indefinite articles—making this a ‘new category’ in Stockwell’s hierarchy."
-  },
-  {
-    q: "AL is interdisciplinary because it draws on:",
-    choices: ["Only linguistics", "Psychology, sociology, law, education, and more"],
-    answer: 1,
-    explanation: " As AAAL states, AL integrates humanities, social, and natural sciences."
-  },
-  {
-    q: "Which statement reflects Widdowson’s view of AL?",
-    choices: ["AL directly applies theory", "AL mediates and adapts theory to human realities"],
-    answer: 1,
-    explanation: " Widdowson emphasized mediation—not mechanical application."
-  },
-  {
-    q: "In EA, ‘errors of competence’ are:",
-    choices: ["Random slips", "Systematic deviations reflecting current L2 knowledge"],
-    answer: 1,
-    explanation: " These show the learner’s developing but incomplete system."
-  },
-  {
-    q: "Why is ‘complete correspondence’ the easiest in CA?",
-    choices: ["L1 and L2 share similar forms", "L1 has more complex rules"],
-    answer: 0,
-    explanation: " When structures match (e.g., past tense), learning is facilitated."
-  },
-  {
-    q: "Which is a communication strategy in IL?",
-    choices: ["Using L1 word order", "Using gestures or paraphrasing to convey meaning"],
-    answer: 1,
-    explanation: " Communication strategies help learners express ideas despite gaps in knowledge."
-  },
-  {
-    q: "AL’s contribution to language policy includes:",
-    choices: ["Imposing one national language", "Balancing identity, equity, and practicality with evidence"],
-    answer: 1,
-    explanation: " AL provides research-based guidance—not top-down mandates."
+    const questions = [
+      {
+        q: "Applied Linguistics primarily focuses on:",
+        choices: ["Abstract language universals", "Real-world problems where language is central"],
+        answer: 1,
+        explanation: "As Brumfit (1977) said, AL investigates 'real-world problems in which language is a central issue.'",
+        category: "theory"
+      },
+      {
+        q: "Theoretical linguistics differs from Applied Linguistics because it:",
+        choices: ["Studies idealized, rule-governed systems", "Solves classroom miscommunication"],
+        answer: 0,
+        explanation: "Theoretical linguistics examines abstract structures; AL tackles messy, contextual issues like teaching or policy.",
+        category: "theory"
+      },
+      {
+        q: "‘Linguistics Applied’ assumes that:",
+        choices: ["Language problems require social context", "Linguistic rules can be directly applied to solve problems"],
+        answer: 1,
+        explanation: "‘Linguistics Applied’ ignores context; AL mediates theory through cultural and psychological lenses.",
+        category: "theory"
+      },
+      {
+        q: "Which field would analyze how Algerian political speeches construct national identity?",
+        choices: ["Phonology", "Critical Discourse Analysis (CDA)"],
+        answer: 1,
+        explanation: "CDA is a core area of Applied Linguistics that examines power, ideology, and language in society.",
+        category: "applied"
+      },
+      {
+        q: "Which is NOT a feature of Applied Linguistics?",
+        choices: ["Interdisciplinary approach", "Exclusive focus on grammar rules"],
+        answer: 1,
+        explanation: "AL draws on psychology, sociology, education—not just grammar.",
+        category: "theory"
+      },
+      {
+        q: "According to Spolsky (2005), Applied Linguistics aims to:",
+        choices: ["Describe universal syntax", "Resolve real-world language-based problems"],
+        answer: 1,
+        explanation: "Spot on! Spolsky emphasized solving problems faced by learners, teachers, lawyers, and policymakers.",
+        category: "theory"
+      },
+      {
+        q: "Which area of AL helps diagnose developmental dyslexia?",
+        choices: ["Theoretical semantics", "Clinical linguistics"],
+        answer: 1,
+        explanation: "Clinical linguistics applies linguistic knowledge to speech and communication disorders.",
+        category: "applied"
+      },
+      {
+        q: "Language testing in AL ensures exams are:",
+        choices: ["Based only on grammar", "Fair, valid, and culturally unbiased"],
+        answer: 1,
+        explanation: "AL ensures tests reflect real communication—not just grammatical accuracy.",
+        category: "applied"
+      },
+      {
+        q: "How has AL evolved since the 1960s?",
+        choices: ["It now focuses only on grammar teaching", "It expanded to include forensic linguistics, CDA, policy, and more"],
+        answer: 1,
+        explanation: "AL grew from language teaching to a broad, socially engaged field.",
+        category: "theory"
+      },
+      {
+        q: "Why can’t theoretical linguistics alone solve a biased test failure?",
+        choices: ["It ignores identity, power, and access", "It uses too much math"],
+        answer: 0,
+        explanation: "Precisely! Real issues involve context—something theoretical linguistics deliberately excludes.",
+        category: "theory"
+      },
+      {
+        q: "Contrastive Analysis (CA) is based on which learning theory?",
+        choices: ["Cognitive constructivism", "Behaviorism"],
+        answer: 1,
+        explanation: "CA treats language learning as habit formation influenced by L1 habits.",
+        category: "analysis"
+      },
+      {
+        q: "According to Lado (1957), CA predicts difficulty by:",
+        choices: ["Comparing L1 and L2 structures", "Analyzing student essays"],
+        answer: 0,
+        explanation: "Lado said we can predict learning problems by systematically comparing native and target languages.",
+        category: "analysis"
+      },
+      {
+        q: "What does ‘negative transfer’ mean in CA?",
+        choices: ["L1 and L2 are similar, easing learning", "L1 and L2 differ, causing interference"],
+        answer: 1,
+        explanation: "Negative transfer occurs when L1 structures interfere with L2 learning.",
+        category: "analysis"
+      },
+      {
+        q: "An Arab learner saying ‘he come’ instead of ‘he comes’ is likely due to:",
+        choices: ["Overgeneralization", "L1 interference (negative transfer)"],
+        answer: 1,
+        explanation: "Arabic lacks third-person -s, so this is classic L1 transfer.",
+        category: "analysis"
+      },
+      {
+        q: "In Stockwell’s CA hierarchy, which is the MOST difficult level?",
+        choices: ["Complete correspondence", "Split (L1 has one form, L2 has two)"],
+        answer: 1,
+        explanation: "A ‘split’ (e.g., Arabic /b/ vs. English /p, b/) is the hardest to learn.",
+        category: "analysis"
+      },
+      {
+        q: "Which CA level applies when Arabic has grammatical gender but English doesn’t?",
+        choices: ["Absent category", "New category"],
+        answer: 0,
+        explanation: "‘Absent category’ means L1 has a feature missing in L2.",
+        category: "analysis"
+      },
+      {
+        q: "A key assumption of Lee (1968) was that:",
+        choices: ["L1 interference is the main cause of L2 difficulty", "Errors come only from overgeneralization"],
+        answer: 0,
+        explanation: "Lee believed L1 habits were the prime source of L2 errors.",
+        category: "analysis"
+      },
+      {
+        q: "CA is most effective in which classroom setting?",
+        choices: ["Multilingual classrooms", "Homogeneous L1 groups (e.g., all Arab learners)"],
+        answer: 1,
+        explanation: "CA works best when all students share the same L1.",
+        category: "applied"
+      },
+      {
+        q: "A major criticism of CA is that it:",
+        choices: ["Overpredicts errors that never occur", "Focuses too much on learner cognition"],
+        answer: 0,
+        explanation: "CA often predicts errors that learners never actually make.",
+        category: "analysis"
+      },
+      {
+        q: "Errors like ‘goed’ or ‘comed’ are problematic for CA because they result from:",
+        choices: ["L1 interference", "Overgeneralization of L2 rules"],
+        answer: 1,
+        explanation: "These are developmental errors—common even in L1 children—not L1 transfer.",
+        category: "analysis"
+      },
+      {
+        q: "Error Analysis (EA) differs from CA because EA:",
+        choices: ["Predicts errors before they happen", "Analyzes actual errors learners produce"],
+        answer: 1,
+        explanation: "EA starts with real learner data, not theoretical predictions.",
+        category: "analysis"
+      },
+      {
+        q: "In EA, a ‘mistake’ is:",
+        choices: ["A systematic error showing incomplete competence", "A random slip that can be self-corrected"],
+        answer: 1,
+        explanation: "Mistakes are performance slips; errors reflect current competence.",
+        category: "analysis"
+      },
+      {
+        q: "An Arab learner saying ‘book Ahmad’ instead of ‘Ahmad’s book’ is an example of:",
+        choices: ["Intralingual error", "Interlingual (transfer) error"],
+        answer: 1,
+        explanation: "This reflects Arabic possessive structure interfering with English.",
+        category: "analysis"
+      },
+      {
+        q: "Saying ‘comed’ for ‘came’ is classified in EA as:",
+        choices: ["Interlingual error", "Intralingual (overgeneralization) error"],
+        answer: 1,
+        explanation: "It's overapplying the regular past tense rule—no L1 involvement.",
+        category: "analysis"
+      },
+      {
+        q: "Which EA step involves determining if an error comes from L1 or overgeneralization?",
+        choices: ["Error identification", "Error source determination"],
+        answer: 1,
+        explanation: "Step 6 in Sridhar's model identifies error sources.",
+        category: "analysis"
+      },
+      {
+        q: "A limitation of EA is that it:",
+        choices: ["Only studies what learners CAN do", "Focuses on deficits without showing learning progression"],
+        answer: 1,
+        explanation: "EA highlights errors but doesn't track how competence develops.",
+        category: "analysis"
+      },
+      {
+        q: "Learners might avoid certain structures in EA because:",
+        choices: ["They've mastered them", "They fear making errors (avoidance strategy)"],
+        answer: 1,
+        explanation: "This 'avoidance' skews EA data—errors aren't always visible.",
+        category: "analysis"
+      },
+      {
+        q: "Interlanguage (IL) views learner language as:",
+        choices: ["Random errors", "A systematic, rule-governed transitional system"],
+        answer: 1,
+        explanation: "IL is coherent, evolving, and internally consistent—not chaotic.",
+        category: "analysis"
+      },
+      {
+        q: "Who coined the term 'Interlanguage'?",
+        choices: ["Larry Selinker", "Robert Lado"],
+        answer: 0,
+        explanation: "Selinker (1969) introduced the term now central to SLA.",
+        category: "analysis"
+      },
+      {
+        q: "'Fossilization' in IL refers to:",
+        choices: ["Temporary errors during learning", "Permanent fixation of non-target forms"],
+        answer: 1,
+        explanation: "Fossilized errors persist despite exposure or instruction.",
+        category: "analysis"
+      },
+      {
+        q: "Which is NOT a process in Selinker's IL model?",
+        choices: ["L1 transfer", "Universal Grammar activation"],
+        answer: 1,
+        explanation: "Selinker's five processes include L1 transfer, training transfer, learning strategies, communication strategies, and overgeneralization—not UG.",
+        category: "analysis"
+      },
+      {
+        q: "Overgeneralization (e.g., 'goed') is part of which IL process?",
+        choices: ["L1 transfer", "Overgeneralization of L2 rules"],
+        answer: 1,
+        explanation: "It's a core cognitive process in IL development.",
+        category: "analysis"
+      },
+      {
+        q: "IL is 'permeable' because:",
+        choices: ["Its rules are fixed from the start", "Its rules are unstable and constantly revised"],
+        answer: 1,
+        explanation: "Permeability means IL evolves as learners integrate new input.",
+        category: "analysis"
+      },
+      {
+        q: "Which factor can cause fossilization?",
+        choices: ["Rich, immersive input", "Advanced age or low motivation"],
+        answer: 1,
+        explanation: "Selinker linked fossilization to psychological and social factors.",
+        category: "analysis"
+      },
+      {
+        q: "IL methodology compares:",
+        choices: ["Only L1 and L2", "L1 output, IL output, and native L2 output"],
+        answer: 1,
+        explanation: "Triangulating these three reveals the learner's transitional system.",
+        category: "analysis"
+      },
+      {
+        q: "A key criticism of IL theory is:",
+        choices: ["It ignores L1 influence", "It lacks agreed methods to track IL change over time"],
+        answer: 1,
+        explanation: "Longitudinal data is hard to collect, making developmental claims difficult to verify.",
+        category: "analysis"
+      },
+      {
+        q: "Which approach is most learner-centered?",
+        choices: ["Contrastive Analysis", "Interlanguage theory"],
+        answer: 1,
+        explanation: "IL sees learners as active hypothesis-testers, not passive habit-formers.",
+        category: "analysis"
+      },
+      {
+        q: "Forensic linguistics in AL might involve:",
+        choices: ["Designing grammar drills", "Analyzing threatening messages for authorship"],
+        answer: 1,
+        explanation: "It applies linguistic analysis to legal and investigative contexts.",
+        category: "applied"
+      },
+      {
+        q: "In multilingual Algeria, AL helps decide:",
+        choices: ["Which font to use in textbooks", "Which languages should be used in education and courts"],
+        answer: 1,
+        explanation: "AL informs language policy with research on identity, access, and equity.",
+        category: "applied"
+      },
+      {
+        q: "CDA examines how language:",
+        choices: ["Follows syntactic trees", "Reproduces power and inequality"],
+        answer: 1,
+        explanation: "CDA reveals ideology in media, politics, and advertising.",
+        category: "applied"
+      },
+      {
+        q: "The shift from CA to EA reflected a move from:",
+        choices: ["Learner-focused to teacher-focused", "Teacher-focused to learner-focused"],
+        answer: 1,
+        explanation: "EA put the learner's output—not just L1-L2 comparison—at the center.",
+        category: "analysis"
+      },
+      {
+        q: "Which error type is 'turn off the TV' vs. 'close the TV'?",
+        choices: ["Syntactic overgeneralization", "Semantic transfer"],
+        answer: 1,
+        explanation: "'Close' reflects L1 (Arabic) verb usage—semantic interference.",
+        category: "analysis"
+      },
+      {
+        q: "'He is comes' is an example of:",
+        choices: ["Morphological overgeneralization", "Syntactic intralingual error"],
+        answer: 1,
+        explanation: "It's a faulty combination of progressive and simple present—within L2 system.",
+        category: "analysis"
+      },
+      {
+        q: "According to CA, teaching content should equal:",
+        choices: ["All L2 grammar", "The sum of L1-L2 differences"],
+        answer: 1,
+        explanation: "Lee (1968) argued teaching should focus only on contrasts.",
+        category: "analysis"
+      },
+      {
+        q: "Which is a 'new category' for Arabic speakers learning English?",
+        choices: ["Plural nouns", "Indefinite articles ('a', 'an')"],
+        answer: 1,
+        explanation: "Arabic lacks indefinite articles—making this a 'new category' in Stockwell's hierarchy.",
+        category: "analysis"
+      },
+      {
+        q: "AL is interdisciplinary because it draws on:",
+        choices: ["Only linguistics", "Psychology, sociology, law, education, and more"],
+        answer: 1,
+        explanation: "As AAAL states, AL integrates humanities, social, and natural sciences.",
+        category: "theory"
+      },
+      {
+        q: "Which statement reflects Widdowson's view of AL?",
+        choices: ["AL directly applies theory", "AL mediates and adapts theory to human realities"],
+        answer: 1,
+        explanation: "Widdowson emphasized mediation—not mechanical application.",
+        category: "theory"
+      },
+      {
+        q: "In EA, 'errors of competence' are:",
+        choices: ["Random slips", "Systematic deviations reflecting current L2 knowledge"],
+        answer: 1,
+        explanation: "These show the learner's developing but incomplete system.",
+        category: "analysis"
+      },
+      {
+        q: "Why is 'complete correspondence' the easiest in CA?",
+        choices: ["L1 and L2 share similar forms", "L1 has more complex rules"],
+        answer: 0,
+        explanation: "When structures match (e.g., past tense), learning is facilitated.",
+        category: "analysis"
+      },
+      {
+        q: "Which is a communication strategy in IL?",
+        choices: ["Using L1 word order", "Using gestures or paraphrasing to convey meaning"],
+        answer: 1,
+        explanation: "Communication strategies help learners express ideas despite gaps in knowledge.",
+        category: "analysis"
+      },
+      {
+        q: "AL's contribution to language policy includes:",
+        choices: ["Imposing one national language", "Balancing identity, equity, and practicality with evidence"],
+        answer: 1,
+        explanation: "AL provides research-based guidance—not top-down mandates.",
+        category: "applied"
+      }
+    ];
+
+// Game state
+let score = 0;
+let current = 0;
+let selectedQuestions = [];
+let timer = 120;
+let timerInterval = null;
+let totalTime = 0;
+let userAnswers = [];
+let timeUsed = 0;
+
+// DOM Elements
+const settingsEl = document.getElementById('settings');
+const gameInterfaceEl = document.getElementById('game-interface');
+const resultsEl = document.getElementById('results');
+const timerEl = document.getElementById('timer');
+const questionEl = document.getElementById('question');
+const choicesEl = document.getElementById('choices');
+const feedbackEl = document.getElementById('feedback');
+const explanationEl = document.getElementById('explanation');
+const nextBtn = document.getElementById('next-btn');
+const playAgainBtn = document.getElementById('play-again-btn');
+const scoreEl = document.getElementById('score');
+const progressFill = document.getElementById('progress-fill');
+const questionCounterEl = document.getElementById('question-counter');
+const questionCategoryEl = document.getElementById('question-category');
+const startBtn = document.getElementById('start-btn');
+const questionCountEl = document.getElementById('question-count');
+const timeLimitEl = document.getElementById('time-limit');
+
+// Initialize the game
+function init() {
+  startBtn.addEventListener('click', startGameWithSettings);
+}
+
+// Start game with custom settings
+function startGameWithSettings() {
+  const questionCount = parseInt(questionCountEl.value);
+  timer = parseInt(timeLimitEl.value);
+  totalTime = timer;
+  
+  // Get selected categories
+  const selectedCategories = [];
+  document.querySelectorAll('input[name="category"]:checked').forEach(checkbox => {
+    selectedCategories.push(checkbox.value);
+  });
+  
+  // Filter questions by category
+  const filteredQuestions = questions.filter(q => selectedCategories.includes(q.category));
+  
+  selectedQuestions = getRandomQuestions(filteredQuestions, questionCount);
+  
+  if (selectedQuestions.length === 0) {
+    alert("Please select at least one question category!");
+    return;
   }
-];
+  
+  score = 0;
+  current = 0;
+  userAnswers = [];
+  timeUsed = 0;
+  
+  scoreEl.textContent = `Score: ${score}`;
+  questionCounterEl.textContent = `Question: 1/${selectedQuestions.length}`;
+  
+  settingsEl.classList.add('hidden');
+  gameInterfaceEl.classList.remove('hidden');
+  resultsEl.classList.add('hidden');
+  
+  startTimer();
+  showQuestion();
+}
 
+// Get random subset of questions
+function getRandomQuestions(arr, count) {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, Math.min(count, arr.length));
+}
 
-    // Game state
-    let score = 0;
-    let current = 0;
-    let selectedQuestions = [];
-    let timer = 120; // 120 seconds
-    let timerInterval = null;
-
-    // DOM Elements
-    const gameEl = document.getElementById('game');
-    const timerEl = document.getElementById('timer');
-    const questionEl = document.getElementById('question');
-    const choicesEl = document.getElementById('choices');
-    const feedbackEl = document.getElementById('feedback');
-    const nextBtn = document.getElementById('next-btn');
-    const playAgainBtn = document.getElementById('play-again-btn');
-    const scoreEl = document.getElementById('score');
-    const progressFill = document.getElementById('progress-fill');
-
-    // Get random subset (min of 5 or full set)
-    function getRandomQuestions(arr, count) {
-      const shuffled = [...arr].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, Math.min(count, arr.length));
+// Timer functions
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimer();
+  timerInterval = setInterval(() => {
+    timer--;
+    timeUsed++;
+    updateTimer();
+    if (timer <= 0) {
+      endGame();
     }
+  }, 1000);
+}
 
-    // Timer
-    function startTimer() {
-      clearInterval(timerInterval);
-      timer = 120;
-      updateTimer();
-      timerInterval = setInterval(() => {
-        timer--;
-        updateTimer();
-        if (timer <= 0) {
-          endGame();
-        }
-      }, 1000);
+function updateTimer() {
+  timerEl.textContent = `Time: ${timer}s`;
+  if (timer <= 10) {
+    timerEl.classList.add('warning');
+  } else {
+    timerEl.classList.remove('warning');
+  }
+}
+
+// Update progress bar
+function updateProgress() {
+  const progress = ((current) / selectedQuestions.length) * 100;
+  progressFill.style.width = `${progress}%`;
+}
+
+// Show current question
+function showQuestion() {
+  if (current >= selectedQuestions.length) {
+    endGame();
+    return;
+  }
+
+  const q = selectedQuestions[current];
+  questionEl.textContent = q.q;
+  questionCategoryEl.textContent = getCategoryDisplayName(q.category);
+  choicesEl.innerHTML = '';
+  feedbackEl.textContent = '';
+  explanationEl.textContent = '';
+  feedbackEl.className = '';
+  explanationEl.className = '';
+  nextBtn.classList.add('hidden');
+  updateProgress();
+  questionCounterEl.textContent = `Question: ${current + 1}/${selectedQuestions.length}`;
+
+  q.choices.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => selectAnswer(i, q);
+    choicesEl.appendChild(btn);
+  });
+}
+
+// Get display name for category
+function getCategoryDisplayName(category) {
+  const names = {
+    'theory': 'Theory',
+    'applied': 'Applied',
+    'analysis': 'Analysis'
+  };
+  return names[category] || category;
+}
+
+// Handle answer selection
+function selectAnswer(selectedIndex, q) {
+  const isCorrect = selectedIndex === q.answer;
+  
+  // Store user answer for review
+  userAnswers.push({
+    question: q.q,
+    userChoice: q.choices[selectedIndex],
+    correctChoice: q.choices[q.answer],
+    explanation: q.explanation,
+    isCorrect: isCorrect
+  });
+
+  feedbackEl.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
+  explanationEl.textContent = q.explanation;
+  
+  feedbackEl.className = isCorrect ? 'correct show' : 'incorrect show';
+  explanationEl.className = 'explanation show';
+
+  if (isCorrect) {
+    score++;
+    scoreEl.textContent = `Score: ${score}`;
+  }
+
+  // Disable choice buttons and highlight correct/incorrect
+  document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answer) {
+      btn.classList.add('correct-answer');
+    } else if (i === selectedIndex && !isCorrect) {
+      btn.classList.add('incorrect-answer');
     }
+  });
 
-    function updateTimer() {
-      timerEl.textContent = `Time: ${timer}s`;
-      if (timer <= 10) {
-        timerEl.style.background = '#e74c3c';
-        timerEl.style.color = 'white';
-      }
-    }
+  nextBtn.classList.remove('hidden');
+}
 
-    // Update progress bar
-    function updateProgress() {
-      const progress = ((current) / selectedQuestions.length) * 100;
-      progressFill.style.width = `${progress}%`;
-    }
+// Next question
+function nextQuestion() {
+  current++;
+  if (current < selectedQuestions.length && timer > 0) {
+    showQuestion();
+  } else {
+    endGame();
+  }
+}
 
-    // Start game
-    function startGame() {
-      selectedQuestions = getRandomQuestions(questions, Math.min(10, questions.length));
-      score = 0;
-      current = 0;
-      scoreEl.textContent = `Score: ${score}`;
-      nextBtn.classList.remove('hidden');
-      playAgainBtn.classList.add('hidden');
-      startTimer();
-      showQuestion();
-    }
+// End game
+function endGame() {
+  clearInterval(timerInterval);
+  
+  gameInterfaceEl.classList.add('hidden');
+  resultsEl.classList.remove('hidden');
+  
+  showResults(); // Use the new showResults function
+}
 
-    // Show question
-    function showQuestion() {
-      if (current >= selectedQuestions.length) {
-        endGame();
-        return;
-      }
+// Show review of answers
+function showReview() {
+  let reviewHTML = '<h2>Review Your Answers</h2>';
+  
+  userAnswers.forEach((answer, index) => {
+    reviewHTML += `
+      <div class="review-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
+        <h3>Question ${index + 1}:</h3>
+        <p>${answer.question}</p>
+        <div class="review-answer">
+          <p><strong>Your answer:</strong> ${answer.userChoice}</p>
+          <p><strong>Correct answer:</strong> ${answer.correctChoice}</p>
+        </div>
+        <div class="review-explanation">
+          <p><strong>Explanation:</strong> ${answer.explanation}</p>
+        </div>
+      </div>
+    `;
+  });
+  
+  resultsEl.innerHTML = `
+    <div id="results-content">
+      ${reviewHTML}
+      <div id="results-actions">
+        <button id="back-to-results" class="btn-secondary">Back to Results</button>
+        <button class="btn-primary" onclick="restartGame()">New Quiz</button>
+      </div>
+    </div>
+  `;
 
-      const q = selectedQuestions[current];
-      questionEl.textContent = q.q;
-      choicesEl.innerHTML = '';
-      feedbackEl.textContent = '';
-      feedbackEl.className = '';
-      nextBtn.classList.add('hidden');
-      updateProgress();
+  // Add event listener to the new button
+  document.getElementById('back-to-results').addEventListener('click', showResults);
+}
 
-      q.choices.forEach((choice, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = choice;
-        btn.onclick = () => selectAnswer(i, q);
-        choicesEl.appendChild(btn);
-      });
-    }
+// Show results screen
+function showResults() {
+  const maxScore = selectedQuestions.length;
+  const percent = Math.round((score / maxScore) * 100);
+  
+  resultsEl.innerHTML = `
+    <div id="results-content">
+      <h2>Quiz Complete!</h2>
+      <div id="results-score">
+        <div id="score-circle">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e0e0" stroke-width="12"></circle>
+            <circle id="score-circle-fill" cx="60" cy="60" r="54" fill="none" stroke="#00BCD4" stroke-width="12" stroke-dasharray="339.292" stroke-dashoffset="339.292" transform="rotate(-90 60 60)"></circle>
+            <text id="score-percent" x="60" y="65" text-anchor="middle" font-size="24" font-weight="bold" fill="#00BCD4">${percent}%</text>
+          </svg>
+        </div>
+        <div id="score-text">
+          <p>You scored</p>
+          <h3 id="final-score">${score}/${maxScore}</h3>
+        </div>
+      </div>
+      <div id="performance-message">${getPerformanceMessage(percent)}</div>
+      <div id="results-breakdown">
+        <div class="result-stat">
+          <span class="stat-label">Correct Answers:</span>
+          <span id="correct-count" class="stat-value">${score}</span>
+        </div>
+        <div class="result-stat">
+          <span class="stat-label">Time Used:</span>
+          <span id="time-used" class="stat-value">${totalTime - timer}s</span>
+        </div>
+        <div class="result-stat">
+          <span class="stat-label">Questions Answered:</span>
+          <span id="questions-answered" class="stat-value">${current}</span>
+        </div>
+      </div>
+      <div id="results-actions">
+        <button id="review-btn" class="btn-secondary">Review Answers</button>
+        <button id="new-game-btn" class="btn-primary">New Quiz</button>
+      </div>
+    </div>
+  `;
 
-    // Handle answer
-    function selectAnswer(selectedIndex, q) {
-      const isCorrect = selectedIndex === q.answer;
-      feedbackEl.textContent = q.explanation;
-      feedbackEl.className = isCorrect ? 'correct show' : 'incorrect show';
+  // Re-add event listeners
+  document.getElementById('review-btn').addEventListener('click', showReview);
+  document.getElementById('new-game-btn').addEventListener('click', restartGame);
+  
+  // Re-animate the score circle
+  const circumference = 2 * Math.PI * 54;
+  const offset = circumference - (percent / 100) * circumference;
+  document.getElementById('score-circle-fill').style.strokeDashoffset = offset;
+}
 
-      if (isCorrect) score++;
-      scoreEl.textContent = `Score: ${score}`;
+// Helper function for performance message
+function getPerformanceMessage(percent) {
+  if (percent >= 90) return 'Outstanding! You have a deep understanding of Applied Linguistics.';
+  if (percent >= 70) return 'Great job! You have a solid grasp of Applied Linguistics concepts.';
+  if (percent >= 50) return 'Good effort! Review the explanations to strengthen your knowledge.';
+  return 'Keep studying! Review the material and try again.';
+}
 
-      // Disable choice buttons
-      document.querySelectorAll('.choices button').forEach(btn => {
-        btn.disabled = true;
-        btn.style.opacity = '0.7';
-        btn.style.cursor = 'not-allowed';
-      });
-
-      nextBtn.classList.remove('hidden');
-    }
-
-    // Next question
-    function nextQuestion() {
-      current++;
-      if (current < selectedQuestions.length && timer > 0) {
-        showQuestion();
-      } else {
-        endGame();
-      }
-    }
-
-    // End game → show result screen
-    function endGame() {
-      clearInterval(timerInterval);
-
-      // Hide standard UI
-      questionEl.textContent = '';
-      choicesEl.innerHTML = '';
-      feedbackEl.textContent = '';
-      nextBtn.classList.add('hidden');
-
-      // Build result screen
-      const maxScore = selectedQuestions.length;
-      const percent = Math.round((score / maxScore) * 100);
-      let message = '';
-
-
-      questionEl.innerHTML = `
-
-        <p>${message}</p>
-        <p>Final Score: <strong>${score} / ${maxScore}</strong></p>
-        <p>(${percent}%)</p>
-      `;
-
-      playAgainBtn.classList.remove('hidden');
-    }
-    function goToPage(url) {
+// Go to home page
+function goToPage(url) {
   window.location.href = url;
 }
-    // Restart cleanly
-    function restartGame() {
-      // Reset game state
-      startGame();
-    }
 
-    // Start on load
-    window.onload = () => {
-      setTimeout(startGame, 120);
-    };
+// Restart game
+function restartGame() {
+  clearInterval(timerInterval);
+  settingsEl.classList.remove('hidden');
+  gameInterfaceEl.classList.add('hidden');
+  resultsEl.classList.add('hidden');
+}
+
+// Initialize on load
+window.onload = init;
   </script>
 </body>
 </html>
