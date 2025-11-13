@@ -469,14 +469,9 @@
       const percent = Math.round((score / maxScore) * 100);
       let message = '';
 
-      if (percent === 100) message = "LINGUISTIC LEGEND! 💯";
-      else if (percent >= 80) message = "Fluent Force! 🌟";
-      else if (percent >= 60) message = "Solid Scholar! 👍";
-      else message = "Keep Practicing! 💪";
 
       questionEl.innerHTML = `
-        <div class="trophy">🏆</div>
-        <h2>GAME OVER!</h2>
+
         <p>${message}</p>
         <p>Final Score: <strong>${score} / ${maxScore}</strong></p>
         <p>(${percent}%)</p>
