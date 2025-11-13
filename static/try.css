@@ -1,0 +1,246 @@
+:root {
+  /* Calming Aqua/Teal (Main functional color) */
+  --primary: #00BCD4; 
+  /* Accessible Gold/Yellow (Highlight for interaction/timer) */
+  --accent: #F4D03F; 
+  /* Clean Emerald Green (Success) */
+  --correct: #2ECC71; 
+  /* Standard Red (Error) */
+  --incorrect: #E74C3C; 
+  /* Deep Charcoal (Dark background for low eye strain) */
+  --bg: #1E272E;
+  /* Slightly Lighter Charcoal (Card surface) */
+  --card-bg: #2D3941;
+  /* Crisp Off-White (High-contrast readability) */
+  --text: #F8F9FA;
+  /* Subtle aqua glow for focus */
+  --glow: 0 0 10px rgba(0, 188, 212, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  /* Professional, highly readable sans-serif font */
+  font-family: 'Inter', 'Segoe UI', sans-serif; 
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+#game {
+  background: var(--card-bg);
+  border-radius: 10px; 
+  padding: 30px;
+  max-width: 700px; /* Wider for comfortable reading */
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--primary); /* Subtle definition border */
+  position: relative;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+#game::before {
+  content: "LEARNING HUB"; /* More professional title */
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--primary);
+  color: var(--card-bg); 
+  padding: 4px 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  text-transform: uppercase;
+}
+
+h1 {
+  color: var(--primary);
+  margin: 0 0 18px;
+  font-size: 2.1em;
+  font-weight: 700;
+  text-shadow: 0 0 2px rgba(0, 188, 212, 0.2);
+}
+
+#timer {
+  background: var(--accent);
+  color: var(--bg); /* Dark text on bright accent */
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 1em;
+  display: inline-block;
+  margin: 10px 0 20px;
+  box-shadow: 0 0 5px var(--accent);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+#progress-bar {
+  height: 8px;
+  background: #445460;
+  border-radius: 4px;
+  margin: 10px 0 20px;
+  overflow: hidden;
+}
+
+#progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.5s ease-out;
+}
+
+#question {
+  background: var(--bg);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  padding: 25px;
+  font-size: 1.25em;
+  margin: 20px 0;
+  color: var(--text);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  font-weight: 400; /* Easier to read than bold on dark mode */
+}
+
+.choices {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+button {
+  background: var(--card-bg);
+  border: 1px solid #445460;
+  border-left: 5px solid var(--primary); /* Accent line for professional look */
+  border-radius: 6px;
+  padding: 16px;
+  font-size: 1.05em;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-weight: 500;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+button:hover {
+  background: #394A58; /* Slightly lighter shade on hover */
+  border-left: 5px solid var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+/* Feedback Styles */
+button.selected-correct {
+  background: var(--correct);
+  color: var(--bg); 
+  border-color: var(--correct);
+  border-left: 5px solid var(--correct);
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
+}
+
+button.selected-incorrect {
+  background: var(--incorrect);
+  color: var(--bg);
+  border-color: var(--incorrect);
+  border-left: 5px solid var(--incorrect);
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.6);
+}
+
+#feedback {
+  font-weight: 600;
+  padding: 18px;
+  margin: 20px 0;
+  border-radius: 6px;
+  min-height: 60px;
+  font-size: 1.1em;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+
+#feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.correct {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--correct); 
+  border: 1px solid var(--correct);
+}
+
+.incorrect {
+  background: rgba(231, 76, 60, 0.15);
+  color: var(--incorrect); 
+  border: 1px solid var(--incorrect);
+}
+
+#score {
+  font-weight: 600;
+  color: var(--primary);
+  margin-top: 15px;
+  font-size: 1.2em;
+}
+
+#next-btn, #play-again-btn #back {
+  width: 100%;
+  margin-top: 20px;
+  background: var(--primary);
+  color: var(--bg);
+  font-weight: 700;
+  border: none;
+  padding: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.15em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4);
+}
+
+#next-btn:hover, #play-again-btn:hover #back:hover {
+  background: #00A9C1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 188, 212, 0.6);
+}
+
+.hidden {
+  display: none;
+}
+
+#result-screen {
+  display: none;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.trophy {
+  font-size: 3em;
+  margin: 10px 0;
+  color: var(--accent);
+}
