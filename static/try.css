@@ -244,3 +244,46 @@ button.selected-incorrect {
   margin: 10px 0;
   color: var(--accent);
 }
+/* ✅ Responsive for phones and small screens */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+    align-items: flex-start;
+  }
+
+  #game {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  h1 {
+    font-size: 1.6em;
+  }
+
+  #question {
+    padding: 15px;
+    font-size: 1em;
+    min-height: auto;
+    text-align: center;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 1em;
+    border-left: 4px solid var(--primary);
+  }
+
+  #timer {
+    font-size: 0.9em;
+    padding: 6px 12px;
+  }
+
+  #feedback {
+    font-size: 1em;
+    padding: 12px;
+  }
+}
+
